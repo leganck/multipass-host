@@ -1,4 +1,4 @@
-package multipass
+package agent
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -12,7 +12,7 @@ func TestListAll(t *testing.T) {
 }
 
 func TestDefaultRunCommand(t *testing.T) {
-	command, err := DefaultRunCommand("ls", "-lah","~")
+	command, err := DefaultRunCommand("ls", "-lah", "~")
 	assert.Nil(t, err)
 	println(command)
 	assert.NotNil(t, command)

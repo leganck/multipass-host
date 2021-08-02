@@ -1,4 +1,4 @@
-package multipass
+package agent
 
 import (
 	"fmt"
@@ -9,19 +9,20 @@ import (
 const defaultInstanceName = "primary"
 const commandName = "multipass"
 
-func init()  {
-	command := exec.Command("commandName")
-	_, err := command.Output()
+func init() {
+	command := exec.Command(commandName, "version")
+	result, err := command.Output()
 	if err != nil {
-		panic(fmt.Sprintf("%v",err))
+		panic(fmt.Sprintf("%v", err))
 	}
+	print(string(result))
 }
 
 func listAll() string {
 	command := exec.Command(commandName, "list", "--format", "json")
 	output, err := command.Output()
 	if err != nil {
-		panic(fmt.Sprintf("multipass list : %v", err))
+		panic(fmt.Sprintf("agent list : %v", err))
 	}
 	return string(output)
 }
@@ -30,13 +31,13 @@ func RunCommand(info *InstanceInfo, command string, args ...string) (string, err
 	cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
 	cmd := exec.Command(commandName, "exec", (*info).Name, "--", "bash", "-c", cmdStr)
 	output, err := cmd.Output()
-	if err !=nil {
-		return "", fmt.Errorf("instance: %s, command: %s , error: %v",(*info).Name,command,err)
+	if err != nil {
+		return "", fmt.Errorf("instance: %s, command: %s , error: %v", (*info).Name, command, err)
 	}
 	return string(output), nil
 }
 
 func DefaultRunCommand(command string, args ...string) (string, error) {
 	instance := GetInstance(defaultInstanceName)
-	return RunCommand(instance,command, args...)
+	return RunCommand(instance, command, args...)
 }

@@ -1,4 +1,4 @@
-package multipass
+package agent
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ func TestGetAllInfo(t *testing.T) {
 	for _, info := range infos {
 		fmt.Printf("%v\n", *info)
 	}
-	assert.Len(t, infos,1 )
+	assert.Len(t, infos, 1)
 }
 
 func TestRunningInstance(t *testing.T) {
@@ -32,7 +32,7 @@ func TestIsRunning(t *testing.T) {
 
 func TestGetInstance(t *testing.T) {
 	instance := GetInstance("primary")
-	fmt.Printf("%v\n",*instance)
+	fmt.Printf("%v\n", *instance)
 	assert.NotNil(t, *instance)
 }
 

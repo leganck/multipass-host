@@ -1,4 +1,4 @@
-package multipass
+package agent
 
 import (
 	"encoding/json"
@@ -60,5 +60,5 @@ func GetIP(name string) (string, error) {
 	if !running {
 		return "", fmt.Errorf("GetIP failed, distro '%s' is not running", name)
 	}
-	return GetInstance(name).Ipv4[0],nil
+	return GetInstance(name).Ipv4[0], nil
 }
