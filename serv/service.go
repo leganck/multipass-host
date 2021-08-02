@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	S        service.Service
-	Logger   service.Logger
+	s        service.Service
+	logger   service.Logger
 	httpServ *http.Server
 )
 
@@ -23,7 +23,7 @@ func (p *program) Start(service.Service) error {
 }
 
 func (p *program) run() {
-	_ = Logger.Info("StartServer, port = 8080")
+	_ = logger.Info("StartServer, port = 8080")
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprintln(w, "httpServ time", time.Now())
 	})
@@ -35,10 +35,10 @@ func (p *program) Stop(service.Service) error {
 	if httpServ != nil {
 		_ = httpServ.Shutdown(context.Background()) // Go 1.8+
 	}
-	_ = Logger.Info("StopServer")
+	_ = logger.Info("StopServer")
 	return nil
 }
-func init() {
+func GetServiceAndLogger() (service.Service, service.Logger) {
 	options := make(service.KeyValue)
 	options["Restart"] = "on-success"
 	options["SuccessExitStatus"] = "1 2 8 SIGKILL"
@@ -52,12 +52,12 @@ func init() {
 
 	prg := &program{}
 	var err error
-	S, err = service.New(prg, svcConfig)
+	s, err = service.New(prg, svcConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
 	errs := make(chan error, 5)
-	Logger, err = S.Logger(errs)
+	logger, err = s.Logger(errs)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,4 +69,14 @@ func init() {
 			}
 		}
 	}()
+	return s, logger
+}
+
+func Interactive() bool {
+	return service.Interactive()
+
+}
+
+func Control(s service.Service, action string) error {
+	return service.Control(s, action)
 }
